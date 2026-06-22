@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <link rel="stylesheet" href="pract/styl.css">
+
     <style>
-    /* Убираем стрелочки у поля года */
+
+        /* убираем стрелки */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -15,13 +17,13 @@
     input[type="number"] {
         -moz-appearance: textfield;
     }
-
-    /* Улучшаем поле года */
     #filterYear {
         padding-right: 45px !important;
     }
     </style>
+
   <title>Система управления книжным каталогом</title>
+
 </head>
 <body>
   <div class="container">
@@ -30,8 +32,11 @@
       СИСТЕМА УПРАВЛЕНИЯ КНИЖНЫМ КАТАЛОГОМ
       <span class="icon">📖</span>
     </header>
+
+      <!-- Статистика -->
     <div class="stats" id="statsContainer"></div>
 
+    <!-- фильтры -->
     <div class="filters">
   <div class="filter-group">
     <label>🔍 По названию</label>
@@ -61,16 +66,16 @@
     </div>
   </div>
 
-  <!-- Кнопка Сбросить -->
+  <!-- кнопка сбросить -->
   <button onclick="resetFilters()" class="add-book-btn" style="margin-left: 0;">
   🔄 Сбросить
   </button>
-        <!-- Кнопка Добавить книгу -->
+        <!-- кнопка добавить книгу -->
   <button class="add-book-btn" onclick="showAddModal()">
     ➕ Добавить книгу
   </button>
     </div>
-
+    <!-- Таблица книг -->
     <div class="main-content">
       <div class="table-container">
         <div class="table-wrapper">
@@ -90,7 +95,7 @@
         </div>
       </div>
     </div>
-  <!-- Модальное окно РЕДАКТИРОВАНИЯ книги (в том же стиле) -->
+  <!-- редактирование книги -->
   <div class="modal" id="editModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -139,7 +144,7 @@
   </div>
 
 
-  <!-- Окно "В разработке" -->
+  <!-- Окно в разработке -->
   <div class="dev-modal" id="devModal">
     <div class="dev-modal-content">
       <h2>🚧 Мобильная версия</h2>
@@ -149,7 +154,7 @@
       </button>
     </div>
   </div>
-  <!-- Модальное окно списка годов -->
+  <!--  окно списка годов -->
   <div class="year-list-modal" id="yearListModal">
     <div class="year-list-content">
       <h3 style="margin-bottom:15px; color:#9c3e2b;">Выберите год</h3>
@@ -160,7 +165,7 @@
     </div>
   </div>
 
-  <!-- Модальное окно добавления книги -->
+  <!-- окно добавления книги -->
   <div class="modal" id="addModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -202,8 +207,10 @@
     </div>
   </div>
 
+<!-- Основные функции -->
+
   <script>
-          // Обновление статистики после всех изменений
+          // Обновление статистики после всех изменений (верхняя часть)
     function updateStats() {
       const totalBooks = books.length;
       const totalCopies = books.reduce((sum, book) => sum + (book.copies || 0), 0);
@@ -229,8 +236,10 @@
         </div>
       `;
     }
+    <!-- Модалка -->
     function showAddModal() {
       document.getElementById('addModal').style.display = 'flex';
+      //очистка полей
       document.getElementById('modalTitle').value = '';
       document.getElementById('modalAuthor').value = '';
       document.getElementById('modalYear').value = '';
@@ -365,7 +374,7 @@
       updateStats();
       renderTable();
     }
-        // === ФУНКЦИИ ДЛЯ РЕДАКТИРОВАНИЯ ===
+   //функции для редактирования
     let editingId = null;
 
     function editBook(id) {
@@ -414,7 +423,7 @@
         renderTable();
       }
     }
-
+        // фильтры
     function resetFilters() {
       document.getElementById('filterTitle').value = '';
       document.getElementById('filterAuthor').value = '';
