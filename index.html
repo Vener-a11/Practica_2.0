@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/index.css">
+    <script src="static/script.js" defer></script>
+    <style>
+
+        /* убираем стрелки */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    #filterYear {
+        padding-right: 45px !important;
+    }
+    </style>
+
+  <title>Система управления книжным каталогом</title>
+
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="icon">📖</span>
+      СИСТЕМА УПРАВЛЕНИЯ КНИЖНЫМ КАТАЛОГОМ
+      <span class="icon">📖</span>
+    </header>
+
+      <!-- Статистика -->
+    <div class="stats" id="statsContainer"></div>
+
+    <!-- фильтры -->
+    <div class="filters">
+  <div class="filter-group">
+    <label>🔍 По названию</label>
+    <input type="text" id="filterTitle" placeholder="Название книги">
+  </div>
+  <div class="filter-group">
+    <label>👤 По автору</label>
+    <input type="text" id="filterAuthor" placeholder="Фио">
+  </div>
+  <div class="filter-group">
+    <label>📚 По жанру</label>
+    <select id="filterGenre">
+      <option value="all">Все жанры</option>
+      <option value="Роман">Роман</option>
+      <option value="Повесть">Повесть</option>
+      <option value="Рассказы">Рассказы</option>
+      <option value="Драматургия">Драматургия</option>
+      <option value="Поэзия">Поэзия</option>
+      <option value="Сказки">Сказки</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>📅 По году издания</label>
+    <div class="year-input-wrapper">
+      <input type="number" id="filterYear" placeholder="Год издания">
+      <span class="calendar-icon" onclick="showYearList()">📅</span>
+    </div>
+  </div>
+
+  <!-- кнопка сбросить -->
+  <button onclick="resetFilters()" class="add-book-btn" style="margin-left: 0;">
+  🔄 Сбросить
+  </button>
+        <!-- кнопка добавить книгу -->
+  <button class="add-book-btn" onclick="showAddModal()">
+    ➕ Добавить книгу
+  </button>
+    </div>
+    <!-- Таблица книг -->
+    <div class="main-content">
+      <div class="table-container">
+        <div class="table-wrapper">
+          <table id="bookTable">
+            <thead>
+              <tr>
+                <th>Название</th>
+                <th>Инициалы</th>
+                <th>Год</th>
+                <th>Жанр</th>
+                <th>Копии</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <!-- редактирование книги -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Редактирование книги</div>
+        <div class="paperclip">🧷</div>
+      </div>
+      <div class="form-field">
+        <label>Название книги</label>
+        <input type="text" id="editModalTitle" placeholder="напишите название книги">
+      </div>
+      <div class="form-field">
+        <label>Автор</label>
+        <input type="text" id="editModalAuthor" placeholder="напишите автора">
+      </div>
+      <div class="form-field">
+        <label>Год издания</label>
+        <input type="number" id="editModalYear" placeholder="напишите год его издания">
+      </div>
+      <div class="form-field">
+        <label>Жанр</label>
+        <input type="text" id="editModalGenre" placeholder="напишите жанр">
+      </div>
+      <div class="form-field">
+        <label>Кол-во экземпляров</label>
+        <input type="number" id="editModalCopies" value="1" placeholder="напишите кол-во экземпляров">
+      </div>
+      <div class="form-field">
+        <label>Описание</label>
+        <textarea id="editModalDescription" placeholder="краткое описание..."></textarea>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-add" onclick="saveEditedBook()">
+          ✅ Сохранить
+        </button>
+        <button class="btn-cancel" onclick="closeEditModal()">
+          ❌ Отменить
+        </button>
+      </div>
+    </div>
+  </div>
+    <div class="version-bar">
+      <button onclick="showDevModal()" style="padding:8px 18px; font-size: 0.95rem; border:none; border-radius:8px; cursor:pointer;">
+        📱 Перейти в мобильную версию
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Окно в разработке -->
+  <div class="dev-modal" id="devModal">
+    <div class="dev-modal-content">
+      <h2>🚧 Мобильная версия</h2>
+      <p style="font-size: 1.1rem; margin-bottom: 25px;">В настоящее время находится в разработке.<br>Скоро будет доступна!</p>
+      <button onclick="closeDevModal()" style="padding:12px 30px; background:#9c3e2b; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        Понятно
+      </button>
+    </div>
+  </div>
+  <!--  окно списка годов -->
+  <div class="year-list-modal" id="yearListModal">
+    <div class="year-list-content">
+      <h3 style="margin-bottom:15px; color:#9c3e2b;">Выберите год</h3>
+      <div id="yearList"></div>
+      <button onclick="closeYearListModal()" style="margin-top:15px; padding:10px 20px; background:#c44a4a; color:white; border:none; border-radius:8px; cursor:pointer;">
+        Закрыть
+      </button>
+    </div>
+  </div>
+
+  <!-- окно добавления книги -->
+  <div class="modal" id="addModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Добавление книги</div>
+        <div class="paperclip">🧷</div>
+      </div>
+      <div class="form-field">
+        <label>Название книги</label>
+        <input type="text" id="modalTitle" placeholder="напишите название книги">
+      </div>
+      <div class="form-field">
+        <label>Автор</label>
+        <input type="text" id="modalAuthor" placeholder="напишите автора">
+      </div>
+      <div class="form-field">
+        <label>Год издания</label>
+        <input type="number" id="modalYear" placeholder="напишите год его издания">
+      </div>
+      <div class="form-field">
+        <label>Жанр</label>
+        <input type="text" id="modalGenre" placeholder="напишите жанр">
+      </div>
+      <div class="form-field">
+        <label>Кол-во экземпляров</label>
+        <input type="number" id="modalCopies" value="1" placeholder="напишите кол-во экземпляров">
+      </div>
+      <div class="form-field">
+        <label>Описание</label>
+        <textarea id="modalDescription" placeholder="краткое описание..."></textarea>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-add" onclick="addBookFromModal()">
+          ✅ Добавить
+        </button>
+        <button class="btn-cancel" onclick="closeModal()">
+          ❌ Отменить
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
